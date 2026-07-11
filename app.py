@@ -12,10 +12,27 @@ from openai import OpenAI
 # 页面配置
 # ============================================================
 st.set_page_config(
-    page_title="AI 产品 Demo",
+    page_title="AI Demo",
     page_icon="🤖",
     layout="wide",
 )
+
+# 隐藏 Streamlit 默认 header/footer/menu
+st.markdown("""
+<style>
+    #MainMenu {visibility: hidden;}
+    header {visibility: hidden;}
+    footer {visibility: hidden;}
+    .stDeployButton {display: none;}
+    .stAppDeployButton {display: none;}
+    [data-testid="stToolbar"] {display: none;}
+    [data-testid="stDecoration"] {display: none;}
+    [data-testid="stStatusWidget"] {display: none;}
+    [data-testid="stHeader"] {display: none;}
+    .st-emotion-cache-1dp5vir {display: none;}
+    .st-emotion-cache-15ecox0 {display: none;}
+</style>
+""", unsafe_allow_html=True)
 
 # ============================================================
 # 配置
@@ -76,10 +93,10 @@ TRAVEL_SCENARIOS = {
 # ============================================================
 # UI
 # ============================================================
-st.title("🤖 AI 产品能力演示")
-st.caption("面试作品 | 智能客服 + 智能旅游规划 | 基于 DeepSeek")
+st.title("智能客服")
+st.caption("点击场景按钮快速体验，或直接输入问题")
 
-tab1, tab2 = st.tabs(["💬 智能客服", "🗺️ 智能旅游规划"])
+tab1, tab2 = st.tabs(["智能客服", "智能旅游规划"])
 
 # ========================
 # Tab 1: 智能客服
@@ -88,21 +105,10 @@ with tab1:
     col1, col2 = st.columns([1, 2])
 
     with col1:
-        st.subheader("🎯 快捷场景")
         scenario = None
         for label, msg in CS_SCENARIOS.items():
             if st.button(label, use_container_width=True, key=f"cs_{label}"):
                 scenario = msg
-
-        st.divider()
-        st.markdown("""
-        **产品设计要点**
-        - 意图识别（LLM语义理解）
-        - 知识库RAG检索
-        - 实时情绪分析
-        - 自动转人工判断
-        - 多轮对话记忆
-        """)
 
     with col2:
         # 初始化聊天历史
@@ -175,8 +181,6 @@ with tab2:
     col1, col2 = st.columns([1, 2])
 
     with col1:
-        st.subheader("✈️ 规划参数")
-
         destination = st.text_input("📍 目的地", value="三亚")
         days = st.slider("📅 天数", 1, 15, 4)
         budget = st.slider("💰 预算（元/人）", 500, 20000, 5000, 500)
@@ -189,7 +193,6 @@ with tab2:
         plan_btn = st.button("🚀 生成旅行规划", type="primary", use_container_width=True)
 
         st.divider()
-        st.subheader("🎯 快捷场景")
         for label in TRAVEL_SCENARIOS:
             if st.button(label, use_container_width=True, key=f"tv_{label}"):
                 d, da, b, s = TRAVEL_SCENARIOS[label]
@@ -199,15 +202,6 @@ with tab2:
                 st.session_state.tv_style = s
                 st.session_state.tv_trigger = True
                 st.rerun()
-
-        st.divider()
-        st.markdown("""
-        **产品设计要点**
-        - 多维度偏好匹配
-        - 结构化Markdown输出
-        - 预算自动分配校验
-        - 可执行到时段级别
-        """)
 
     with col2:
         # 处理快捷场景触发
@@ -254,10 +248,4 @@ with tab2:
         if st.session_state.travel_result:
             st.markdown(st.session_state.travel_result)
         else:
-            st.info("👈 填写参数后点击「生成旅行规划」，或试试快捷场景一键填充")
-
-# ============================================================
-# 页脚
-# ============================================================
-st.divider()
-st.caption("🚀 Powered by DeepSeek · Built with Streamlit · Deployed on Streamlit Cloud")
+            st.info("👈 填写参数后点击「生成旅行规划」，或点击下方快捷场景一键填充")
