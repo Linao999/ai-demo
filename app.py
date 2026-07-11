@@ -17,7 +17,19 @@ st.set_page_config(
     layout="wide",
 )
 
-# 隐藏 Streamlit 默认 header/footer/menu
+# 隐藏 Streamlit Cloud 外壳的右下角 GitHub/Streamlit 链接
+st.components.html("""
+<script>
+(function() {
+    var style = document.createElement('style');
+    style.textContent = 'a[href*="github.com"], [data-testid="stAppCreatorAvatar"], ' +
+        'img[alt="App Creator Avatar"], a[href*="streamlit.io/cloud"] { display: none !important; }';
+    try { window.parent.document.head.appendChild(style); } catch(e) {}
+    try { window.top.document.head.appendChild(style); } catch(e) {}
+})();
+</script>
+""", height=0)
+
 st.markdown("""
 <style>
     #MainMenu {visibility: hidden;}
