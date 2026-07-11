@@ -210,15 +210,17 @@ with tab2:
         """)
 
     with col2:
-        # 处理快捷场景
-        if st.session_state.get("tv_trigger"):
-            st.session_state.tv_trigger = False
+        # 处理快捷场景触发
+        should_plan = plan_btn or st.session_state.pop("tv_generate", False)
+        if st.session_state.pop("tv_trigger", False):
+            # 读取快捷场景填写的值并标记需要生成
             destination = st.session_state.get("tv_dest", "三亚")
             days = st.session_state.get("tv_days", 4)
             budget = st.session_state.get("tv_budget", 5000)
             style = st.session_state.get("tv_style", "休闲度假")
-            # 触发规划
-            plan_btn = True
+            additional = st.session_state.get("tv_additional", "")
+            st.session_state.tv_generate = True
+            st.rerun()
 
         # 历史结果
         if "travel_result" not in st.session_state:
