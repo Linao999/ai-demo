@@ -17,19 +17,7 @@ st.set_page_config(
     layout="wide",
 )
 
-# 隐藏 Streamlit Cloud 外壳的右下角 GitHub/Streamlit 链接
-st.components.html("""
-<script>
-(function() {
-    var style = document.createElement('style');
-    style.textContent = 'a[href*="github.com"], [data-testid="stAppCreatorAvatar"], ' +
-        'img[alt="App Creator Avatar"], a[href*="streamlit.io/cloud"] { display: none !important; }';
-    try { window.parent.document.head.appendChild(style); } catch(e) {}
-    try { window.top.document.head.appendChild(style); } catch(e) {}
-})();
-</script>
-""", height=0)
-
+# 隐藏 Streamlit Cloud 外壳的右下角链接
 st.markdown("""
 <style>
     #MainMenu {visibility: hidden;}
@@ -45,6 +33,19 @@ st.markdown("""
     .st-emotion-cache-15ecox0 {display: none;}
 </style>
 """, unsafe_allow_html=True)
+
+# 隐藏外壳页面的 GitHub/Streamlit 链接（通过 iframe postMessage）
+st.components.v1.html("""
+<script>
+(function() {
+    var css = 'a[href*="github.com"], [data-testid="stAppCreatorAvatar"], ' +
+        'img[alt="App Creator Avatar"] { display: none !important; }';
+    var s = document.createElement('style');
+    s.textContent = css;
+    try { window.parent.document.head.appendChild(s); } catch(e) {}
+})();
+</script>
+""", height=0)
 
 # ============================================================
 # 配置
